@@ -34,7 +34,7 @@ function convertToBalanceTree(arr, start, end){
     }
 
     let mid = parseInt((start + end) / 2);
-    let node = new Node(arr[mid])
+        let node = new Node(arr[mid])
     node.left = convertToBalanceTree(arr, start, mid - 1);
     node.right = convertToBalanceTree(arr, mid + 1 , end);
     return node;
@@ -85,3 +85,28 @@ function prettyPrint(node, prefix = "", isLeft = true) {
       prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
     }
   };
+
+ InsertToBinary(6);
+ InsertToBinary(3.5);
+ prettyPrint(tree.root);
+
+  function InsertToBinary(value) {
+     tree.root = insertRecord(tree.root, value);
+  }
+
+  function insertRecord(node ,value){
+    if(node === null){
+        let newNode = new Node(value);
+        return newNode;
+     }
+    
+     else if(node.data < value){
+        node.right = insertRecord(node.right, value);
+     }
+
+     else if(node.data > value){
+        node.left = insertRecord(node.left, value);
+     }
+
+     return node;
+  }
