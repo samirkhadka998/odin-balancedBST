@@ -24,8 +24,8 @@ function buildTree(arr){
     arr = (mergeSort(arr));
     //return 0 level node
     tree.root = convertToBalanceTree(arr,0, arr.length - 1);
-    console.log(tree.node);
-    // prettyPrint(tree.root)
+    console.log(tree.root);
+    prettyPrint(tree.root)
 }
 
 function convertToBalanceTree(arr, start, end){
