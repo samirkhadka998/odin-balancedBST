@@ -1,14 +1,14 @@
 class Node{
-    constructor(data){
-        this.data = data,
+    constructor(key){
+        this.key = key,
         this.left = null,
         this.right = null
     }
 }
 
 class Tree{
-    constructor(root){
-        this.root = root;
+    constructor(node){
+        this.node = node;
     }
 }
 
@@ -23,9 +23,9 @@ function buildTree(arr){
     //sort
     arr = (mergeSort(arr));
     //return 0 level node
-    tree.root = convertToBalanceTree(arr,0, arr.length - 1);
-    console.log(tree.root);
-    prettyPrint(tree.root)
+    tree.node = convertToBalanceTree(arr,0, arr.length - 1);
+    console.log(tree.node);
+    prettyPrint(tree.node)
 }
 
 function convertToBalanceTree(arr, start, end){
@@ -80,7 +80,7 @@ function prettyPrint(node, prefix = "", isLeft = true) {
     if (node.right !== null) {
       prettyPrint(node.right, `${prefix}${isLeft ? "│   " : "    "}`, false);
     }
-    console.log(`${prefix}${isLeft ? "└── " : "┌── "}${node.data}`);
+    console.log(`${prefix}${isLeft ? "└── " : "┌── "}${node.key}`);
     if (node.left !== null) {
       prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
     }
@@ -88,10 +88,16 @@ function prettyPrint(node, prefix = "", isLeft = true) {
 
  InsertToBinary(6);
  InsertToBinary(3.5);
- prettyPrint(tree.root);
+ prettyPrint(tree.node);
+ tree.node = DeleteBinary(tree.node, 6);
+ prettyPrint(tree.node);
+ tree.node = DeleteBinary(tree.node, 4);
+ prettyPrint(tree.node);
+ tree.node = DeleteBinary(tree.node, 43);
+ prettyPrint(tree.node);
 
   function InsertToBinary(value) {
-     tree.root = insertRecord(tree.root, value);
+     tree.node = insertRecord(tree.node, value);
   }
 
   function insertRecord(node ,value){
@@ -100,13 +106,71 @@ function prettyPrint(node, prefix = "", isLeft = true) {
         return newNode;
      }
     
-     else if(node.data < value){
+     else if(node.key < value){
         node.right = insertRecord(node.right, value);
      }
 
-     else if(node.data > value){
+     else if(node.key > value){
         node.left = insertRecord(node.left, value);
      }
 
      return node;
+  }
+
+  function DeleteBinary(node , k) {
+        //Base case
+        if(node == null){
+            return node;
+        }
+
+        //for leaf node
+        if(node.key > k){
+            node.left = DeleteBinary(node.left, k);
+            return node;
+        }
+
+        else if(node.key < k){
+            node.right = DeleteBinary(node.right, k);
+            return node;
+        }
+       
+        //we reached to node
+
+        //If one of the children is empty
+        if(node.left == null){
+            let temp = node.right;
+            node = null;
+            return temp;
+        }
+
+        else if(node.right == null){
+            let temp = node.left;
+            node = null;
+            return temp;
+        }
+
+        //if both children exits
+        else{
+
+            let parent = node;
+            
+            let successor = node.right;
+
+            while(successor.left != null){
+                parent = successor;
+                successor = successor.left;
+            }
+
+            if(parent != node){
+                parent.left = successor.right;
+            }
+            else{
+                parent.right = successor.right;
+            }
+
+            node.key = successor.key;
+            return node;
+
+
+        }
   }
