@@ -88,13 +88,17 @@ function prettyPrint(node, prefix = "", isLeft = true) {
 
  InsertToBinary(6);
  InsertToBinary(3.5);
- prettyPrint(tree.node);
  tree.node = DeleteBinary(tree.node, 6);
- prettyPrint(tree.node);
- tree.node = DeleteBinary(tree.node, 4);
- prettyPrint(tree.node);
  tree.node = DeleteBinary(tree.node, 43);
  prettyPrint(tree.node);
+ console.log(findNode(tree.node, 3.5))
+ levelOrder(tree.node)
+ inorderRecursive(tree.node)
+ prettyPrint(tree.node)
+ preorderRecursive(tree.node);
+ postorderRecursive(tree.node)
+ findDepthAndHeight(tree.node, 3.5)
+ console.log(isBalanced(tree.node))
 
   function InsertToBinary(value) {
      tree.node = insertRecord(tree.node, value);
@@ -170,7 +174,127 @@ function prettyPrint(node, prefix = "", isLeft = true) {
 
             node.key = successor.key;
             return node;
-
-
         }
+  }
+
+  function findNode(node, k) {
+     if(node == null){
+        return node;
+     }
+
+     if(node.key < k){
+        return findNode(node.right , k)
+     }
+     else if (node.key > k){
+        return findNode(node.left, k);
+     }
+
+     return node;
+  }
+
+  function levelOrder(root) {
+        if(root == null) return;
+        const queue = [];
+        queue.push(root);
+
+        while (queue.length) {
+            const node = queue.shift();
+            console.log(node.key);
+
+            if(node.left) queue.push(node.left);
+            if(node.right) queue.push(node.right);
+        }
+
+        console.log(queue);
+  }
+
+  function inorderRecursive(tree) {
+    const result = [];
+    function inorderTraverse(node) {
+        if(!node) return;
+        inorderTraverse(node.left);
+        result.push(node.key);
+        inorderTraverse(node.right);
+        
+    }
+
+    inorderTraverse(tree);
+    console.log(result);
+  }
+  
+
+  function preorderRecursive(tree) {
+    const result = [];
+    function preorderTraverse(node) {
+        if(!node) return;
+
+        result.push(node.key);
+        preorderTraverse(node.left);
+        preorderTraverse(node.right)
+    }
+
+    preorderTraverse(tree);
+    console.log(result)
+  }
+
+  function postorderRecursive(tree) {
+    const result = [];
+    function posorderTraverse(node) {
+        if(!node) return;
+        posorderTraverse(node.left);
+        posorderTraverse(node.right);
+        result.push(node.key)
+    }
+
+    posorderTraverse(tree);
+    return result;
+    
+  }
+
+  function findDepthAndHeight(node, k){
+    if(node == null) return 0;
+
+    let depth = -1;
+    let height = -1;
+
+    const queue = [];
+    queue.push(node);
+    let level = 0
+    
+    while (queue.length > 0) {
+        const n = queue.length;
+        for(let i = 0 ; i < n ; i++){
+            const frontNode = queue.shift();
+            if(frontNode.data === k)
+                depth = level;
+            if(frontNode.left !== null){
+                queue.push(frontNode.left);
+            }
+            if(frontNode.right !== null){
+                queue.push(frontNode.right);
+            }
+            level++;
+        }
+
+        height = level - depth - 1;
+        console.log("Depth : " + depth);
+        console.log("Height " + height);
+    }
+  }
+
+
+  function height(root) {
+    if(root == null) return 0;
+    return Math.max(height(root.left), height(root.right)) + 1;
+  }
+  function isBalanced(root) {
+     if(root == null) return null;
+
+     let lh = height(root.left);
+     let rh = height(root.right);
+
+     if(Math.abs(lh - rh) <= 1 && isBalanced(root.left)== true && isBalanced(root.right) == true)
+     return true;
+
+     return false;
   }
